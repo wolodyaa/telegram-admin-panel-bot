@@ -1,29 +1,29 @@
-# 🛡️ Registration & Admin Panel Bot
+# 🛡️ Telegram Admin Panel Template (Aiogram 3)
 
-A Telegram bot with a multi-step user registration system and a secure admin panel for data management, built with Aiogram 3 and SQLite.
+A simple, secure, and ready-to-use Admin Panel template for Telegram bots built with **Aiogram 3** and **SQLite**. 
 
-## 🛠 Tech Stack
-* **Python 3**
-* **Aiogram 3** — asynchronous framework for Telegram bots
-* **SQLite3** — built-in database for secure user data storage
+Easily integrate a hidden admin menu into your existing bot to search and view user data without rewriting your core logic.
 
 ## ✨ Features
-* **User Registration:** Multi-step registration using a Finite State Machine (FSM) to collect first name and surname.
-* **Data Storage:** Automatically saves the user's Telegram ID, username, name, and surname to the database.
-* **Admin Panel (`/admin`):** A hidden panel accessible only to the bot administrator (verified via `ADMIN_ID`).
-* **Data Lookup:** Admins can search for user data by entering their Telegram username.
-* **Robust Error Handling:** The bot gracefully handles cases where an admin searches for a non-existent user or a user has hidden their username.
+* **Secure Access:** Hidden `/admin` command accessible only to the specified `ADMIN_ID`.
+* **User Lookup:** Search for users by their Telegram `@username`.
+* **FSM Integration:** Uses Finite State Machine to wait for admin input without breaking your bot's main flow.
+* **Robust Error Handling:** Gracefully handles cases where the user is not found in the database or has no username.
+* **Plug-and-Play:** Designed to be easily copied and adapted into any existing Aiogram 3 project.
 
-## 📁 Project Structure
-* `main.py` — Entry point, bot startup, and database initialization.
-* `app/handlers.py` — Handlers for commands, messages, and admin callbacks.
-* `app/database.py` — Database functions (SQL queries for registration and data retrieval).
-* `app/keyboards.py` — Inline and reply keyboards.
-* `app/states.py` — FSM states for registration and admin panel operations.
-* `assets/config.py` — Configuration file with the bot token, DB path, and admin ID.
+## 🛠 Tech Stack
+* Python 3
+* Aiogram 3
+* SQLite3
 
-## ⚙️ How to Run Locally
-1. Clone the repository.
-2. Install dependencies:
-   ```bash
-   pip install aiogram
+## 🚀 How to Integrate (Step-by-Step)
+
+To add this admin panel to your existing bot, follow these steps:
+
+1. **Copy the files:** 
+   Copy `admin_handlers.py` (or the admin parts of `handlers.py`), `admin_states.py` (or `states.py`), and the admin keyboards into your project.
+
+2. **Add your Admin ID:**
+   In your config file (e.g., `config.py`), add your personal Telegram ID:
+   ```python
+   ADMIN_ID = 123456789 # Replace with your actual Telegram ID
