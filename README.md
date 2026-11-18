@@ -20,10 +20,10 @@ Easily integrate a hidden admin menu into your existing bot to search and view u
 
 To add this admin panel to your existing bot, follow these steps:
 
-1. **Copy the files:** 
-   Copy `admin_handlers.py` (or the admin parts of `handlers.py`), `admin_states.py` (or `states.py`), and the admin keyboards into your project.
+1. **Copy the logic:**
+   Copy the admin-related handlers from `app/handlers.py`, the `Admin_Panel` state from `app/states.py`, and the `admin_panel` keyboard from `app/keyboards.py` into your project.
 
 2. **Add your Admin ID:**
-   In your config file (e.g., `config.py`), add your personal Telegram ID:
+   In your config file (e.g., `assets/config.py`), add your personal Telegram ID:
    ```python
    ADMIN_ID = 123456789 # Replace with your actual Telegram ID
