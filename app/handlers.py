@@ -65,23 +65,6 @@ async def admin_panel(message: Message):
 
 
 @router.callback_query(F.data == "check_data")
-async def admin_check_data(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text("Введите юзернейм пользователя.")
-    await state.set_state(st.Admin_Panel.waiting_username)
+async def admin_check_data(callback: CallbackQuery):
+    await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.inline_users())
     await callback.answer()
-
-
-@router.message(st.Admin_Panel.waiting_username)
-async def admin_panel_get_username(message: Message, state: FSMContext):
-    username = message.text.strip().lstrip('@')
-    user_data = db.get_data(username)
-    if not user_data:
-        await message.answer(f"Пользователь с юзернеймом {username} не найден.")
-    else:
-        name, surname, user_id = user_data
-        await message.answer(f"Данные пользователя: {username}\n"
-                            f"Имя: {name}\n"
-                            f"Фамилия: {surname}\n"
-                            f"ID пользователя: {user_id}")
-
-    await state.clear()

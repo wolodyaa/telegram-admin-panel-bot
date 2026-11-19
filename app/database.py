@@ -8,7 +8,7 @@ def init_db():
 
         c.execute("""
         CREATE TABLE IF NOT EXISTS users(
-        user_id integer PRIMARY KEY,
+        user_id integer,
         username str,
         name str,
         surname str
@@ -40,17 +40,14 @@ def get_reg_data(user_id: int):
             return None
 
 
-def get_data(username: str):
+def get_usernames():
 
     with sqlite3.connect(DB_PATH) as db:
 
         c = db.cursor()
 
-        c.execute("SELECT name, surname, user_id FROM users WHERE username = ? ORDER BY rowid DESC LIMIT 1", (username,))
+        c.execute("SELECT username FROM users ORDER BY rowid DESC")
 
-        result = c.fetchone()
+        result = c.fetchall()
 
         return result
-
-
-
