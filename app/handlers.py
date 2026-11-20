@@ -23,7 +23,7 @@ async def cmdstart(message: Message):
         await message.answer(f"Привет {name}!")
 
 
-@router.message(F.text == "Начать регистрацию")
+@router.message(F.text == "📝Начать регистрацию")
 async def register_start(message: Message, state: FSMContext):
     user_info = db.get_reg_data(message.from_user.id)
     if not user_info:
@@ -66,5 +66,26 @@ async def admin_panel(message: Message):
 
 @router.callback_query(F.data == "check_data")
 async def admin_check_data(callback: CallbackQuery):
-    await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.inline_users())
+    await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users())
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("user_"))
+async def admin_show_data(callback: CallbackQuery):
+    username = callback.data.replace("user_", "")
+    user_data = db.get_data(username)
+    if not user_data:
+        await callback.message.edit_text("По данному пользователю нету данных.", reply_markup=kb.return_button)
+    else:
+        user_id, name, surname = user_data
+        await callback.message.edit_text("Данные пользователя:\n"
+                                            f"ID пользователя: {user_id}\n"
+                                            f"Имя: {name}\n"
+                                            f"Фамилия: {surname}\n", reply_markup=kb.return_button)
+    await callback.answer()
+
+
+@router.callback_query(F.data == "return")
+async def admin_return_to_users(callback: CallbackQuery):
+    await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users())
     await callback.answer()
