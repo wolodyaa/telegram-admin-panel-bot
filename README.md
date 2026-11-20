@@ -11,7 +11,7 @@ Easily integrate a hidden admin menu into your existing bot to view registered u
 * **Database Integration:** Saves and retrieves user data (ID, username, name, surname) securely using SQLite.
 
 ## 🚀 Roadmap (Work in Progress)
-* [X] **View User Data:** Connect the generated inline buttons (currently using dummy URLs) to callback data to display detailed user profiles.
+* [X] **View User Data:** Connect the generated inline buttons to callback data to display detailed user profiles.
 * [ ] **Admin Actions:** Add ability to edit or delete users directly from the admin panel.
 * [ ] **Search Feature:** Add text-based search by username or user ID.
 
