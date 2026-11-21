@@ -65,3 +65,12 @@ def get_usernames():
         result = c.fetchall()
 
         return result
+
+
+def delete_data(username: str):
+
+    with sqlite3.connect(DB_PATH) as db:
+
+        c = db.cursor()
+
+        c.execute("DELETE FROM users WHERE username = ?", (username,))
