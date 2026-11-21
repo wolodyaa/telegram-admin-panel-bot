@@ -12,7 +12,7 @@ Easily integrate a hidden admin menu into your existing bot to view registered u
 
 ## 🚀 Roadmap (Work in Progress)
 * [X] **View User Data:** Connect the generated inline buttons to callback data to display detailed user profiles.
-* [ ] **Admin Actions:** Add ability to edit or delete users directly from the admin panel.
+* [X] **Admin Actions:** Add ability to delete users directly from the admin panel.
 * [ ] **Search Feature:** Add text-based search by username or user ID.
 
 ## 🛠 Tech Stack
