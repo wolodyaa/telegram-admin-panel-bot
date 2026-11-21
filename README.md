@@ -10,7 +10,7 @@ Easily integrate a hidden admin menu into your existing bot to view registered u
 * **Dynamic Keyboards:** Automatically generates an inline keyboard with all registered usernames using `InlineKeyboardBuilder`.
 * **Database Integration:** Saves and retrieves user data (ID, username, name, surname) securely using SQLite.
 
-## 🚀 Roadmap (Work in Progress)
+## 🚀 Roadmap
 * [X] **View User Data:** Connect the generated inline buttons to callback data to display detailed user profiles.
 * [X] **Admin Actions:** Add ability to delete users directly from the admin panel.
 * [ ] **Search Feature:** Add text-based search by username or user ID.
