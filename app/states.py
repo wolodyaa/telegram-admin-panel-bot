@@ -6,3 +6,6 @@ class Register(StatesGroup):
 
 class Confirm_Delete(StatesGroup):
     waiting_confirm = State()
+
+class Edit_Data(StatesGroup):
+    waiting_new_value = State()

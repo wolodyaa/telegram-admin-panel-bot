@@ -59,7 +59,7 @@ async def register_surname(message: Message, state: FSMContext):
 @router.message(Command("admin"))
 async def admin_panel(message: Message):
     if message.from_user.id == ADMIN_ID:
-        await message.answer("Вы вошли в админскую панель.", reply_markup=kb.admin_panel)
+        await message.answer("Вы вошли в панель администратора.", reply_markup=kb.admin_panel)
     else:
         await message.answer("🚫")
 
@@ -70,7 +70,7 @@ async def admin_check_data(callback: CallbackQuery):
     if not users:
         await callback.message.edit_text("Нет пользователей для просмотра.", reply_markup=kb.return_button)
     else:
-        await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users(False))
+        await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users("check"))
         await callback.answer()
 
 
@@ -80,8 +80,13 @@ async def admin_delete_data(callback: CallbackQuery):
     if not users:
         await callback.message.edit_text("Нет пользователей для удаления.", reply_markup=kb.return_button)
     else:
-        await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users(True))
+        await callback.message.edit_text("Выберите пользователя.", reply_markup= await kb.users("delete"))
         await callback.answer()
+
+
+@router.callback_query(F.data == "admin_leave")
+async def admin_leave(callback: CallbackQuery):
+    await callback.message.edit_text("Вы вышли из панели администратора.")
 
 
 @router.callback_query(F.data.startswith("check_user_"))
@@ -132,9 +137,55 @@ async def delete_confirm_no(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Хорошо. Возвращаемся обратно в панель", reply_markup=kb.admin_panel)
     await callback.answer()
     await state.clear()
-    
+
+
+@router.callback_query(F.data == "edit_data")
+async def admin_edit_data(callback: CallbackQuery):
+    await callback.message.edit_text("Выберите пользователя для изменения данных.", reply_markup= await kb.users("edit"))
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("edit_user_"))
+async def admin_show_editable_data(callback: CallbackQuery):
+    username = callback.data.replace("edit_user_", "")
+    await callback.message.edit_text("Выберите данные для изменения.", reply_markup= await kb.edit_user(username))
+    await callback.answer()
+
+
+@router.callback_query(F.data.startswith("edit_field_"))
+async def admin_edit_user_data(callback: CallbackQuery, state: FSMContext):
+
+    data_parts = callback.data.replace("edit_field_", "").split("_", 1)
+
+    field_to_edit = data_parts[0]
+    username = data_parts[1]
+    if field_to_edit == "name":
+        value = "имя"
+    elif field_to_edit == "surname":
+        value = "фамилия"
+
+
+    await state.update_data(field=field_to_edit, username=username)
+
+    await callback.message.edit_text(f"Введите новое значение для переменной '{value}' (для @{username}).")
+
+    await state.set_state(st.Edit_Data.waiting_new_value)
+    await callback.answer()
+
+
+@router.message(st.Edit_Data.waiting_new_value)
+async def admin_update_new_data(message: Message, state: FSMContext):
+    new_value = message.text.strip()
+    data = await state.get_data()
+
+    db.update_data(data['username'], data['field'], new_value)
+
+    await message.answer(f"Данные обновлены! Новое значение '{new_value}' (для @{data['username']})", reply_markup=kb.admin_panel)
+    await state.clear()
+
 
 @router.callback_query(F.data == "return")
-async def admin_return_to_users(callback: CallbackQuery):
-    await callback.message.edit_text("Вы вошли в админскую панель.", reply_markup= kb.admin_panel)
+async def admin_return_to_users(callback: CallbackQuery, state: FSMContext):
+    await state.clear()
+    await callback.message.edit_text("Вы вернулись в панель администратора.", reply_markup= kb.admin_panel)
     await callback.answer()

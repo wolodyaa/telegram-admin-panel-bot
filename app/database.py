@@ -74,3 +74,18 @@ def delete_data(username: str):
         c = db.cursor()
 
         c.execute("DELETE FROM users WHERE username = ?", (username,))
+
+
+def update_data(username: str, field: str, new_value: str):
+
+    if field not in ["name", "surname"]:
+        return False
+
+    with sqlite3.connect(DB_PATH) as db:
+
+        c = db.cursor()
+
+        c.execute(f"UPDATE users SET {field} = ? WHERE username = ?", (new_value, username))
+
+        return True
+        
