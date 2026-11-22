@@ -1,19 +1,23 @@
 # 🛡️ Telegram Admin Panel Template (Aiogram 3)
 
-A simple, secure, and evolving Admin Panel template for Telegram bots built with **Aiogram 3** and **SQLite**. 
+A simple, secure, and fully-featured Admin Panel template for Telegram bots built with **Aiogram 3** and **SQLite**. 
 
-Easily integrate a hidden admin menu into your existing bot to view registered users. Perfect for beginners looking to understand how to build admin interfaces and dynamic inline keyboards.
+Easily integrate a hidden admin menu into your existing bot to manage users (view, edit, delete) without rewriting your core logic. Perfect for beginners looking to understand how to build admin interfaces, dynamic inline keyboards, and secure data manipulation.
 
 ## ✨ Features
 * **User Registration:** Multi-step registration (Name, Surname) using a Finite State Machine (FSM).
 * **Secure Access:** Hidden `/admin` command accessible only to the specified `ADMIN_ID`.
-* **Dynamic Keyboards:** Automatically generates an inline keyboard with all registered usernames using `InlineKeyboardBuilder`.
-* **Database Integration:** Saves and retrieves user data (ID, username, name, surname) securely using SQLite.
+* **Dynamic Keyboards:** Automatically generates inline keyboards with all registered usernames using `InlineKeyboardBuilder`.
+* **View User Data:** Display user ID, name, and surname by selecting them from a generated list.
+* **Edit User Data:** Securely update a user's name or surname using dynamic inline buttons and FSM.
+* **Delete User Data:** Remove users from the database with a secure Yes/No confirmation step.
+* **Robust Error Handling:** Gracefully handles cases where users have no username or data is missing.
 
 ## 🚀 Roadmap
-* [X] **View User Data:** Connect the generated inline buttons to callback data to display detailed user profiles.
-* [X] **Delete Action:** Add ability to delete users directly from the admin panel.
-* [X] **Edit Action:** Add Ability to edit users data directly from admin panel.
+* [x] **View User Data:** Connect the generated inline buttons to callback data to display detailed user profiles.
+* [x] **Delete Action:** Add ability to delete users directly from the admin panel.
+* [x] **Edit Action:** Add ability to edit user data directly from the admin panel.
+* [ ] **Search Feature:** Add text-based search by username or user ID.
 
 ## 🛠 Tech Stack
 * Python 3
@@ -22,10 +26,10 @@ Easily integrate a hidden admin menu into your existing bot to view registered u
 
 ## 📁 Project Structure
 * `main.py` — Entry point, bot startup, and database initialization.
-* `app/handlers.py` — Handlers for commands, registration, and admin callbacks.
-* `app/database.py` — Database functions (SQL queries for registration and data retrieval).
-* `app/keyboards.py` — Reply and inline keyboards (including dynamic builder).
-* `app/states.py` — FSM states for registration.
+* `app/handlers.py` — Handlers for commands, registration, and admin callbacks (CRUD logic).
+* `app/database.py` — Database functions (SQL queries for registration, retrieval, updates, and deletion).
+* `app/keyboards.py` — Reply and inline keyboards (including dynamic builders for user lists).
+* `app/states.py` — FSM states for registration, deletion confirmation, and editing.
 * `assets/config.py` — Configuration file with the bot token, DB path, and admin ID.
 
 ## ⚙️ How to Run Locally
