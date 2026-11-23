@@ -8,8 +8,8 @@ def init_db():
 
         c.execute("""
         CREATE TABLE IF NOT EXISTS users(
-        user_id integer PRIMARY KEY,
-        username str,
+        user_id integer UNIQUE,
+        username str PRIMARY KEY,
         name str,
         surname str
         )""")
@@ -21,7 +21,18 @@ def register(user_id: int, username, name: str, surname: str):
 
         c = db.cursor()
 
-        c.execute("INSERT OR REPLACE INTO users(user_id, username, name, surname) VALUES(?, ?, ?, ?)", (user_id, username, name, surname))
+        c.execute("INSERT INTO users(user_id, username, name, surname) VALUES(?, ?, ?, ?)", (user_id, username, name, surname))
+
+
+def check_username_exists(username: str):
+
+    with sqlite3.connect(DB_PATH) as db:
+
+        c = db.cursor()
+
+        c.execute("SELECT 1 FROM users WHERE username = ?", (username,))
+
+        return c.fetchone() is not None
 
 
 def get_reg_data(user_id: int):

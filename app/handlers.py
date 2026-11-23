@@ -1,3 +1,5 @@
+import re
+
 from aiogram import F, Router
 
 from aiogram.filters import CommandStart, Command
@@ -36,24 +38,44 @@ async def register_start(message: Message, state: FSMContext):
 
 @router.message(st.Register.waiting_name)
 async def register_name(message: Message, state: FSMContext):
-    text = message.text.strip()
+    name = message.text.strip()
     await message.answer("Введи свою фамилию.")
-    await state.update_data(name=text)
+    await state.update_data(name=name)
     await state.set_state(st.Register.waiting_surname)
 
 
 @router.message(st.Register.waiting_surname)
 async def register_surname(message: Message, state: FSMContext):
     surname = message.text.strip()
+    await message.answer("Введи свой уникальный идентификатор пользователя на латинице.(НЕЛЬЗЯ ИЗМЕНИТЬ)")
+    await state.update_data(surname=surname)
+    await state.set_state(st.Register.waiting_username)
+
+
+@router.message(st.Register.waiting_username)
+async def register_username(message: Message, state: FSMContext):
+    username = message.text.strip()
     data = await state.get_data()
-    await message.answer("Ты успешно зарегистрировался!\n"
-                         "Твои данные:\n"
-                         f"Имя: {data['name']}\n"
-                         f"Фамилия: {surname}")
 
-    db.register(message.from_user.id, message.from_user.username, data['name'], surname)
+    if re.fullmatch(r"[A-Za-z]+", username):
+        if db.check_username_exists(username):
+            await message.answer("Твой идентификатор уже занят. Придумай другой.")
+            return
+        else:
 
-    await state.clear()
+            await message.answer("Ты успешно зарегистрировался!\n"
+                                "Твои данные:\n"
+                                f"Имя: {data['name']}\n"
+                                f"Фамилия: {data['surname']}\n"
+                                f"Уникальный идентификатор: {username}")
+            db.register(message.from_user.id, username, data['name'], data['surname'])
+            await state.clear()
+
+    else:
+        await message.answer("Идентификатор должен быть только из латинский букв.\n"
+                             "Введите свой уникальный идентификатор пользователя на латинице.(НЕЛЬЗЯ ИЗМЕНИТЬ)")
+        return
+
 
 
 @router.message(Command("admin"))
