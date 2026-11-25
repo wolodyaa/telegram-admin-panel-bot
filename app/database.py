@@ -99,4 +99,4 @@ def update_data(username: str, field: str, new_value: str):
         c.execute(f"UPDATE users SET {field} = ? WHERE username = ?", (new_value, username))
 
         return True
-        
+

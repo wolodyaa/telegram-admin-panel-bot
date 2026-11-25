@@ -5,6 +5,9 @@ class Register(StatesGroup):
     waiting_surname = State()
     waiting_username = State()
 
+class Find_Data(StatesGroup):
+    waiting_username = State()
+
 class Confirm_Delete(StatesGroup):
     waiting_confirm = State()
 

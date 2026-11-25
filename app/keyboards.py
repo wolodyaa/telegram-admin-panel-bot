@@ -6,6 +6,7 @@ register = ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text="📝Начать 
 
 
 admin_panel = InlineKeyboardMarkup(inline_keyboard=[[InlineKeyboardButton(text="👀Посмотреть данные", callback_data="check_data")],
+                                                    [InlineKeyboardButton(text="🔍Найти пользователя по идентификатору", callback_data="find_data")],
                                                     [InlineKeyboardButton(text="✍️Редактировать данные", callback_data="edit_data")],
                                                     [InlineKeyboardButton(text="🗑Удалить данные", callback_data="delete_data")],
                                                     [InlineKeyboardButton(text="◀️Выйти из панели", callback_data="admin_leave")]])

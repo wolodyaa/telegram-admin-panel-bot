@@ -144,23 +144,6 @@ async def admin_delete_user_data(callback: CallbackQuery, state: FSMContext):
     await callback.answer()
         
 
-
-@router.callback_query(st.Confirm_Delete.waiting_confirm, F.data == "confirm_yes")
-async def delete_confirm_yes(callback: CallbackQuery, state: FSMContext):
-    username = await state.get_data()
-    db.delete_data(username["username"])
-    await callback.message.edit_text("Данные пользователя удалены.", reply_markup=kb.admin_panel)
-    await callback.answer()
-    await state.clear()
-
-
-@router.callback_query(st.Confirm_Delete.waiting_confirm, F.data == "confirm_no")
-async def delete_confirm_no(callback: CallbackQuery, state: FSMContext):
-    await callback.message.edit_text("Хорошо. Возвращаемся обратно в панель", reply_markup=kb.admin_panel)
-    await callback.answer()
-    await state.clear()
-
-
 @router.callback_query(F.data == "edit_data")
 async def admin_edit_data(callback: CallbackQuery):
     await callback.message.edit_text("Выберите пользователя для изменения данных.", reply_markup= await kb.users("edit"))
@@ -203,6 +186,46 @@ async def admin_update_new_data(message: Message, state: FSMContext):
     db.update_data(data['username'], data['field'], new_value)
 
     await message.answer(f"Данные обновлены! Новое значение '{new_value}' (для @{data['username']})", reply_markup=kb.admin_panel)
+    await state.clear()
+
+
+@router.callback_query(F.data == "find_data")
+async def admin_wait_for_username(callback: CallbackQuery, state: FSMContext):
+    await callback.message.edit_text("Введите идентификатор пользователя.", reply_markup=kb.return_button)
+    await callback.answer()
+    await state.set_state(st.Find_Data.waiting_username)
+
+
+@router.message(st.Find_Data.waiting_username)
+async def admin_find_user(message: Message, state: FSMContext):
+    username = message.text.strip()
+    data = db.get_data(username)
+
+    if not data:
+        await message.answer("Такого пользователя не существует. Попробуйте еще раз либо вернитесь к выбору функции.", reply_markup=kb.return_button)
+
+    else:
+        user_id, name, surname = data
+        await message.answer("Данные пользователя:\n"
+                                    f"ID пользователя: {user_id}\n"
+                                    f"Имя: {name}\n"
+                                    f"Фамилия: {surname}\n", reply_markup=kb.return_button)
+        await state.clear()
+
+
+@router.callback_query(st.Confirm_Delete.waiting_confirm, F.data == "confirm_yes")
+async def delete_confirm_yes(callback: CallbackQuery, state: FSMContext):
+    username = await state.get_data()
+    db.delete_data(username["username"])
+    await callback.message.edit_text("Данные пользователя удалены.", reply_markup=kb.admin_panel)
+    await callback.answer()
+    await state.clear()
+
+
+@router.callback_query(st.Confirm_Delete.waiting_confirm, F.data == "confirm_no")
+async def delete_confirm_no(callback: CallbackQuery, state: FSMContext):
+    await callback.message.edit_text("Хорошо. Возвращаемся обратно в панель", reply_markup=kb.admin_panel)
+    await callback.answer()
     await state.clear()
 
 
