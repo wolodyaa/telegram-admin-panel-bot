@@ -51,13 +51,18 @@ def get_reg_data(user_id: int):
             return None
 
 
-def get_data(username: str):
+def get_data(field: str):
 
+    if field not in ["user_id", "username"]:
+        return False
+    if field == "user_id":
+        field = int(field)
+    
     with sqlite3.connect(DB_PATH) as db:
 
         c = db.cursor()
 
-        c.execute("SELECT user_id, name, surname FROM users WHERE username = ? ORDER BY rowid DESC LIMIT 1", (username,))
+        c.execute(f"SELECT user_id, name, surname FROM users WHERE {field} = ? ORDER BY rowid DESC LIMIT 1", (field,))
 
         result = c.fetchone()
 

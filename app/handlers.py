@@ -190,13 +190,26 @@ async def admin_update_new_data(message: Message, state: FSMContext):
 
 
 @router.callback_query(F.data == "find_data")
-async def admin_wait_for_username(callback: CallbackQuery, state: FSMContext):
+async def admin_wait_for_choose(callback: CallbackQuery, state: FSMContext):
+    await callback.message.edit_text("Выберите способ поиска.", reply_markup=kb.admin_panel_search)
+    await callback.answer()
+
+
+@router.callback_query(F.data == "find_data_by_id")
+async def admin_wait_for_id(callback: CallbackQuery, state: FSMContext):
     await callback.message.edit_text("Введите идентификатор пользователя.", reply_markup=kb.return_button)
     await callback.answer()
-    await state.set_state(st.Find_Data.waiting_username)
+    await state.set_state(st.Find_Data.waiting_user_identificator)
 
 
-@router.message(st.Find_Data.waiting_username)
+@router.callback_query(F.data == "find_data_by_identificator")
+async def admin_wait_for_id(callback: CallbackQuery, state: FSMContext):
+    await callback.message.edit_text("Введите ID пользователя.", reply_markup=kb.return_button)
+    await callback.answer()
+    await state.set_state(st.Find_Data.waiting_user_id)
+
+
+@router.message(st.Find_Data.waiting_user_identificator)
 async def admin_find_user(message: Message, state: FSMContext):
     username = message.text.strip()
     data = db.get_data(username)
@@ -211,6 +224,24 @@ async def admin_find_user(message: Message, state: FSMContext):
                                     f"Имя: {name}\n"
                                     f"Фамилия: {surname}\n", reply_markup=kb.return_button)
         await state.clear()
+
+
+@router.message(st.Find_Data.waiting_user_id)
+async def admin_find_user(message: Message, state: FSMContext):
+    user_id = message.text.strip()
+    data = db.get_data(user_id)
+
+    if not data:
+        await message.answer("Такого пользователя не существует. Попробуйте еще раз либо вернитесь к выбору функции.", reply_markup=kb.return_button)
+
+    else:
+        user_id, name, surname = data
+        await message.answer("Данные пользователя:\n"
+                                    f"ID пользователя: {user_id}\n"
+                                    f"Имя: {name}\n"
+                                    f"Фамилия: {surname}\n", reply_markup=kb.return_button)
+        await state.clear()
+
 
 
 @router.callback_query(st.Confirm_Delete.waiting_confirm, F.data == "confirm_yes")
