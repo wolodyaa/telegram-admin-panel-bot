@@ -19,6 +19,10 @@ Easily integrate a hidden admin menu into your existing bot to manage users (vie
 * [x] **Delete Action:** Add ability to delete users directly from the admin panel.
 * [x] **Edit Action:** Add ability to edit user data directly from the admin panel.
 * [x] **Search Feature:** Add text-based search by username and user id.
+* [ ] **Pagination:** Add pagination (previous/next buttons) for the user list to handle large databases gracefully.
+* [ ] **Broadcast Feature:** Allow admins to send a message to all registered users.
+* [ ] **CSV Export:** Export the user database to a CSV file for external use.
+* [ ] **User Roles:** Add support for multiple admins/moderators with different permissions.
 
 ## 🛠 Tech Stack
 * Python 3
